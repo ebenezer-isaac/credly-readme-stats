@@ -43,6 +43,33 @@ export function useCardUrl(state: BuilderState): string {
         if (!state.show_skills) params.set("show_skills", "false");
         if (state.sort !== "recent") params.set("sort", state.sort);
         break;
+      case "carousel":
+        if (state.visible_count !== DEFAULT_STATE.visible_count) params.set("visible_count", String(state.visible_count));
+        if (state.badge_size !== DEFAULT_STATE.badge_size) params.set("badge_size", String(state.badge_size));
+        if (!state.show_name) params.set("show_name", "false");
+        if (state.show_issuer) params.set("show_issuer", "true");
+        if (state.interval !== DEFAULT_STATE.interval) params.set("interval", String(state.interval));
+        if (state.sort !== "recent") params.set("sort", state.sort);
+        if (state.filter_issuer) params.set("filter_issuer", state.filter_issuer);
+        if (state.filter_skill) params.set("filter_skill", state.filter_skill);
+        if (state.max_items !== DEFAULT_STATE.max_items) params.set("max_items", String(state.max_items));
+        if (state.card_width !== DEFAULT_STATE.card_width) params.set("card_width", String(state.card_width));
+        break;
+      case "overview":
+        if (!state.show_icons) params.set("show_icons", "false");
+        if (state.hide) params.set("hide", state.hide);
+        if (state.line_height !== DEFAULT_STATE.line_height) params.set("line_height", String(state.line_height));
+        if (state.visible_count !== DEFAULT_STATE.visible_count) params.set("visible_count", String(state.visible_count));
+        if (state.badge_size !== DEFAULT_STATE.badge_size) params.set("badge_size", String(state.badge_size));
+        if (!state.show_name) params.set("show_name", "false");
+        if (state.show_issuer) params.set("show_issuer", "true");
+        if (state.interval !== DEFAULT_STATE.interval) params.set("interval", String(state.interval));
+        if (state.sort !== "recent") params.set("sort", state.sort);
+        if (state.filter_issuer) params.set("filter_issuer", state.filter_issuer);
+        if (state.filter_skill) params.set("filter_skill", state.filter_skill);
+        if (state.max_items !== DEFAULT_STATE.max_items) params.set("max_items", String(state.max_items));
+        if (state.card_width !== DEFAULT_STATE.card_width) params.set("card_width", String(state.card_width));
+        break;
     }
 
     return `${API_BASE}/api/${state.cardType}?${params.toString()}`;

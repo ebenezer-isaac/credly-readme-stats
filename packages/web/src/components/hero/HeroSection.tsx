@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { API_BASE, DEMO_USER } from "../../constants/config";
+import { API_BASE, DEMO_USER, CREDLY_LOGO_URL } from "../../constants/config";
 
 export function HeroSection() {
   const [username, setUsername] = useState(DEMO_USER);
   const previewUrl = username.trim()
-    ? `${API_BASE}/api/stats?username=${encodeURIComponent(username.trim())}&theme=default`
+    ? `${API_BASE}/api/stats?username=${encodeURIComponent(username.trim())}&theme=radical`
     : "";
 
   return (
@@ -24,8 +24,11 @@ export function HeroSection() {
 
           <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
             Dynamic SVG cards for your{" "}
-            <span className="bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">
-              Credly badges
+            <span className="inline-flex items-baseline gap-2">
+              <img src={CREDLY_LOGO_URL} alt="Credly" className="inline h-[0.8em] translate-y-[0.05em]" />
+              <span className="bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">
+                badges
+              </span>
             </span>
           </h1>
 

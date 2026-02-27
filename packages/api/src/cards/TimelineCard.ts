@@ -23,7 +23,7 @@ export function renderTimelineCard(
   const showDescription = options.show_description ?? false;
   const showSkills = options.show_skills !== false;
   const cardWidth = clamp(options.card_width ?? 495, 400, 800);
-  const maxTextWidth = cardWidth - CONTENT_X - PADDING_X;
+  const maxTextWidth = cardWidth - CONTENT_X - PADDING_X * 2;
 
   // Filter and sort
   const filtered = filterBadges(badges, options.filter_issuer, options.filter_skill);

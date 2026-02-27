@@ -85,7 +85,7 @@ describe("renderOverviewCard", () => {
     });
 
     it("uses 'oc' animation prefix", () => {
-      const svg = renderOverviewCard(stats, badges, defaultOptions());
+      const svg = renderOverviewCard(stats, badges, defaultOptions({ visible_count: 3 }));
       expect(svg).toContain("oc-slide");
       expect(svg).toContain("oc-strip");
       expect(svg).toContain("oc-dot-0");
@@ -151,7 +151,7 @@ describe("renderOverviewCard", () => {
     });
 
     it("respects interval option", () => {
-      const svg = renderOverviewCard(stats, badges, defaultOptions({ interval: 5 }));
+      const svg = renderOverviewCard(stats, badges, defaultOptions({ interval: 5, visible_count: 3 }));
       // 5 badges * 5s = 25s
       expect(svg).toContain("25s");
     });

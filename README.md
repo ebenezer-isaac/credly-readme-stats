@@ -36,6 +36,18 @@ Replace `YOUR_USERNAME` with your Credly username (from your profile URL: `credl
 ![Timeline](https://credly-readme-stats.onrender.com/api/timeline?username=YOUR_USERNAME)
 ```
 
+### Carousel
+
+```md
+![Carousel](https://credly-readme-stats.onrender.com/api/carousel?username=YOUR_USERNAME)
+```
+
+### Overview (Stats + Carousel)
+
+```md
+![Overview](https://credly-readme-stats.onrender.com/api/overview?username=YOUR_USERNAME)
+```
+
 ### Single Badge
 
 ```md
@@ -105,6 +117,51 @@ Chronological timeline of your badge achievements.
 | `sort` | enum | `recent` | `recent`, `oldest` |
 | `filter_issuer` | string | `""` | Issuer filter |
 | `card_width` | number | `495` | Width (400-800) |
+
+### Carousel
+
+Animated sliding carousel of your badge images with CSS-only animation.
+
+```md
+![Carousel](https://credly-readme-stats.onrender.com/api/carousel?username=YOUR_USERNAME&visible_count=3&badge_size=80)
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `visible_count` | number | `5` | Visible badges at once (1-6) |
+| `badge_size` | number | `64` | Badge image size px (32-128) |
+| `show_name` | boolean | `true` | Show badge name |
+| `show_issuer` | boolean | `false` | Show issuer name |
+| `interval` | number | `3` | Seconds per slide (1-10) |
+| `sort` | enum | `recent` | `recent`, `oldest`, `name`, `issuer` |
+| `filter_issuer` | string | `""` | Comma-separated issuer filter |
+| `filter_skill` | string | `""` | Comma-separated skill filter |
+| `max_items` | number | `12` | Max badges in carousel (3-30) |
+| `card_width` | number | auto | Card width (200-800) |
+
+### Overview
+
+Stats summary at top + badge carousel at bottom — the combined "big" card.
+
+```md
+![Overview](https://credly-readme-stats.onrender.com/api/overview?username=YOUR_USERNAME&visible_count=3&hide=expiring)
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `show_icons` | boolean | `true` | Show stat row icons |
+| `hide` | string | `""` | Hide: `total`, `issuers`, `skills`, `active`, `expiring`, `top_issuers`, `top_skills`, `carousel` |
+| `line_height` | number | `25` | Stat row spacing |
+| `visible_count` | number | `5` | Carousel visible badges (1-6) |
+| `badge_size` | number | `64` | Carousel badge size px (32-128) |
+| `show_name` | boolean | `true` | Show badge name in carousel |
+| `show_issuer` | boolean | `false` | Show issuer in carousel |
+| `interval` | number | `3` | Carousel seconds per slide (1-10) |
+| `sort` | enum | `recent` | `recent`, `oldest`, `name`, `issuer` |
+| `filter_issuer` | string | `""` | Comma-separated issuer filter |
+| `filter_skill` | string | `""` | Comma-separated skill filter |
+| `max_items` | number | `12` | Max badges in carousel (3-30) |
+| `card_width` | number | `550` | Card width (350-800) |
 
 ### Single Badge Detail
 

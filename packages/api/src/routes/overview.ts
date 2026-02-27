@@ -2,21 +2,17 @@ import { Hono } from "hono";
 import { renderOverviewCard } from "../cards/OverviewCard.js";
 import { getUserBadgeData } from "../fetchers/credlyFetcher.js";
 import { hydrateBadgeImages } from "../fetchers/imageFetcher.js";
-import { AppError, setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
-import { isValidUsername, parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
-import { parseBaseOptions, handleRouteError } from "./shared.js";
+import { setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
+import { parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
+import { parseBaseOptions, handleRouteError, validateUsername, SORT_VALUES } from "./shared.js";
 import type { OverviewCardOptions } from "../types/card.js";
-
-const OVERVIEW_SORT_VALUES = ["recent", "oldest", "name", "issuer"] as const;
 
 export const overviewRoute = new Hono();
 
 overviewRoute.get("/", async (c) => {
   try {
     const base = parseBaseOptions(c);
-    if (!base.username || !isValidUsername(base.username)) {
-      throw new AppError("INVALID_USERNAME", `Invalid username: "${base.username}"`);
-    }
+    validateUsername(base.username);
 
     const options: OverviewCardOptions = {
       ...base,
@@ -28,7 +24,7 @@ overviewRoute.get("/", async (c) => {
       show_name: parseOptionalBoolean(c.req.query("show_name")),
       show_issuer: parseOptionalBoolean(c.req.query("show_issuer")),
       interval: parseOptionalInt(c.req.query("interval")),
-      sort: parseEnum(c.req.query("sort"), OVERVIEW_SORT_VALUES),
+      sort: parseEnum(c.req.query("sort"), SORT_VALUES),
       filter_issuer: c.req.query("filter_issuer"),
       filter_skill: c.req.query("filter_skill"),
       max_items: parseOptionalInt(c.req.query("max_items")),

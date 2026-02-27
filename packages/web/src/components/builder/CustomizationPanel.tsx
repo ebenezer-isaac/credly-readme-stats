@@ -169,6 +169,71 @@ export function CustomizationPanel({ state, onThemeChange, onFieldChange }: Cust
           </label>
         </div>
       )}
+
+      {state.cardType === "carousel" && (
+        <div className="space-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Carousel Options</h4>
+          <SliderRow label="Visible count" value={state.visible_count} min={1} max={6} onChange={(v) => onFieldChange("visible_count", v)} />
+          <SliderRow label="Badge size" value={state.badge_size} min={32} max={128} step={8} onChange={(v) => onFieldChange("badge_size", v)} />
+          <SliderRow label="Interval (s)" value={state.interval} min={1} max={10} onChange={(v) => onFieldChange("interval", v)} />
+          <SliderRow label="Max items" value={state.max_items} min={3} max={30} onChange={(v) => onFieldChange("max_items", v)} />
+          <ToggleRow label="Show name" checked={state.show_name} onChange={(v) => onFieldChange("show_name", v)} />
+          <ToggleRow label="Show issuer" checked={state.show_issuer} onChange={(v) => onFieldChange("show_issuer", v)} />
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Sort</span>
+            <select className="input-field text-sm" value={state.sort} onChange={(e) => onFieldChange("sort", e.target.value)}>
+              <option value="recent">Recent</option>
+              <option value="oldest">Oldest</option>
+              <option value="name">Name</option>
+              <option value="issuer">Issuer</option>
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Filter by issuer</span>
+            <input type="text" className="input-field font-mono text-xs" placeholder="e.g. Amazon,IBM" value={state.filter_issuer} onChange={(e) => onFieldChange("filter_issuer", e.target.value)} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Filter by skill</span>
+            <input type="text" className="input-field font-mono text-xs" placeholder="e.g. Cloud,DevOps" value={state.filter_skill} onChange={(e) => onFieldChange("filter_skill", e.target.value)} />
+          </label>
+        </div>
+      )}
+
+      {state.cardType === "overview" && (
+        <div className="space-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Overview Options</h4>
+          <ToggleRow label="Show icons" checked={state.show_icons} onChange={(v) => onFieldChange("show_icons", v)} />
+          <SliderRow label="Card width" value={state.card_width} min={350} max={800} step={5} onChange={(v) => onFieldChange("card_width", v)} />
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Hide sections</span>
+            <input type="text" className="input-field font-mono text-xs" placeholder="e.g. expiring,carousel" value={state.hide} onChange={(e) => onFieldChange("hide", e.target.value)} />
+          </label>
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Carousel Section</h4>
+          <SliderRow label="Visible count" value={state.visible_count} min={1} max={6} onChange={(v) => onFieldChange("visible_count", v)} />
+          <SliderRow label="Badge size" value={state.badge_size} min={32} max={128} step={8} onChange={(v) => onFieldChange("badge_size", v)} />
+          <SliderRow label="Interval (s)" value={state.interval} min={1} max={10} onChange={(v) => onFieldChange("interval", v)} />
+          <SliderRow label="Max items" value={state.max_items} min={3} max={30} onChange={(v) => onFieldChange("max_items", v)} />
+          <ToggleRow label="Show name" checked={state.show_name} onChange={(v) => onFieldChange("show_name", v)} />
+          <ToggleRow label="Show issuer" checked={state.show_issuer} onChange={(v) => onFieldChange("show_issuer", v)} />
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Sort</span>
+            <select className="input-field text-sm" value={state.sort} onChange={(e) => onFieldChange("sort", e.target.value)}>
+              <option value="recent">Recent</option>
+              <option value="oldest">Oldest</option>
+              <option value="name">Name</option>
+              <option value="issuer">Issuer</option>
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Filter by issuer</span>
+            <input type="text" className="input-field font-mono text-xs" placeholder="e.g. Amazon,IBM" value={state.filter_issuer} onChange={(e) => onFieldChange("filter_issuer", e.target.value)} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600 dark:text-gray-400">Filter by skill</span>
+            <input type="text" className="input-field font-mono text-xs" placeholder="e.g. Cloud,DevOps" value={state.filter_skill} onChange={(e) => onFieldChange("filter_skill", e.target.value)} />
+          </label>
+        </div>
+      )}
     </div>
   );
 }

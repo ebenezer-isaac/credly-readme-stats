@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { COMMON_PARAMS, STATS_PARAMS, GRID_PARAMS, TIMELINE_PARAMS, type ParamDef } from "../../constants/params";
+import { COMMON_PARAMS, STATS_PARAMS, GRID_PARAMS, TIMELINE_PARAMS, CAROUSEL_PARAMS, OVERVIEW_PARAMS, type ParamDef } from "../../constants/params";
 
-type DocTab = "common" | "stats" | "grid" | "timeline";
+type DocTab = "common" | "stats" | "grid" | "timeline" | "carousel" | "overview";
 
 const TABS: readonly { readonly id: DocTab; readonly label: string }[] = [
   { id: "common", label: "Common" },
   { id: "stats", label: "Stats" },
   { id: "grid", label: "Grid" },
   { id: "timeline", label: "Timeline" },
+  { id: "carousel", label: "Carousel" },
+  { id: "overview", label: "Overview" },
 ];
 
 const TAB_PARAMS: Record<DocTab, readonly ParamDef[]> = {
@@ -15,6 +17,8 @@ const TAB_PARAMS: Record<DocTab, readonly ParamDef[]> = {
   stats: STATS_PARAMS,
   grid: GRID_PARAMS,
   timeline: TIMELINE_PARAMS,
+  carousel: CAROUSEL_PARAMS,
+  overview: OVERVIEW_PARAMS,
 };
 
 function ParamsTable({ params }: { readonly params: readonly ParamDef[] }) {
@@ -92,6 +96,8 @@ export function DocsSection() {
               {activeTab === "stats" && "![Stats](https://credly-readme-stats.onrender.com/api/stats?username=YOUR_USERNAME&show_icons=true&hide=expiring,top_skills)"}
               {activeTab === "grid" && "![Grid](https://credly-readme-stats.onrender.com/api/grid?username=YOUR_USERNAME&columns=4&rows=3&badge_size=80)"}
               {activeTab === "timeline" && "![Timeline](https://credly-readme-stats.onrender.com/api/timeline?username=YOUR_USERNAME&max_items=5&show_description=true)"}
+              {activeTab === "carousel" && "![Carousel](https://credly-readme-stats.onrender.com/api/carousel?username=YOUR_USERNAME&visible_count=3&badge_size=80&interval=4)"}
+              {activeTab === "overview" && "![Overview](https://credly-readme-stats.onrender.com/api/overview?username=YOUR_USERNAME&visible_count=3&hide=expiring)"}
             </code>
           </div>
         </div>

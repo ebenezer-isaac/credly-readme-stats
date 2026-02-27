@@ -3,9 +3,9 @@ import { BaseCard, PADDING_X } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
 import { clamp } from "../common/utils.js";
 import { sortBadges, filterBadges } from "../common/badgeFilters.js";
-import { buildCarouselSection } from "./sections/CarouselSection.js";
+import { buildCarouselSection } from "./sections/index.js";
 
-const DEFAULT_VISIBLE_COUNT = 3;
+const DEFAULT_VISIBLE_COUNT = 5;
 const DEFAULT_BADGE_SIZE = 64;
 const DEFAULT_INTERVAL = 3;
 const DEFAULT_MAX_ITEMS = 12;

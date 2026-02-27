@@ -2,7 +2,7 @@ import type { BadgeStats, StatsCardOptions } from "../types/card.js";
 import { BaseCard } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
 import { parseArray, clamp } from "../common/utils.js";
-import { buildStatsSection, STAT_ICONS } from "./sections/StatsSection.js";
+import { buildStatsSection, STAT_ICONS } from "./sections/index.js";
 
 // Layout defaults
 const DEFAULT_LINE_HEIGHT = 25;

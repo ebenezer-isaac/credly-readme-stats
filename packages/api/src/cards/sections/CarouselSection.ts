@@ -115,8 +115,8 @@ export function buildCarouselSection(
     .map((badge, i) => {
       const x = i * cellWidth;
       const imageHref = badge.imageBase64 ?? badge.imageUrl;
-      const truncatedName = truncateText(badge.name, badgeSize, 11);
-      const truncatedIssuer = truncateText(badge.issuerName, badgeSize, 10);
+      const truncatedName = truncateText(badge.name, cellWidth - 4, 11);
+      const truncatedIssuer = truncateText(badge.issuerName, cellWidth - 4, 10);
 
       let cellSvg = `
         <g transform="translate(${x}, 0)">

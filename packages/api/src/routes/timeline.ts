@@ -1,21 +1,17 @@
 import { Hono } from "hono";
 import { renderTimelineCard } from "../cards/TimelineCard.js";
 import { getUserBadgeData } from "../fetchers/credlyFetcher.js";
-import { AppError, setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
-import { isValidUsername, parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
-import { parseBaseOptions, handleRouteError } from "./shared.js";
+import { setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
+import { parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
+import { parseBaseOptions, handleRouteError, validateUsername, TIMELINE_SORT_VALUES } from "./shared.js";
 import type { TimelineCardOptions } from "../types/card.js";
-
-const TIMELINE_SORT_VALUES = ["recent", "oldest"] as const;
 
 export const timelineRoute = new Hono();
 
 timelineRoute.get("/", async (c) => {
   try {
     const base = parseBaseOptions(c);
-    if (!base.username || !isValidUsername(base.username)) {
-      throw new AppError("INVALID_USERNAME", `Invalid username: "${base.username}"`);
-    }
+    validateUsername(base.username);
 
     const options: TimelineCardOptions = {
       ...base,

@@ -1,5 +1,6 @@
 import type { BaseCardConfig, CardColors } from "../types/card.js";
 import { encodeHTML } from "../common/utils.js";
+import { measureText, truncateText } from "../common/textMeasure.js";
 
 export const PADDING_X = 25;
 
@@ -58,21 +59,66 @@ export class BaseCard {
     );
   }
 
-  private renderTitle(): string {
-    if (this.hideTitle) return "";
+  /**
+   * Compute title SVG and any extra CSS needed (e.g. marquee animation).
+   * Returns { svg, css } to keep render() pure.
+   */
+  private computeTitle(): { readonly svg: string; readonly css: string } {
+    if (this.hideTitle) return { svg: "", css: "" };
 
     const iconSvg = this.titlePrefixIcon
       ? `<svg class="icon" x="0" y="-13" viewBox="0 0 16 16" width="16" height="16" fill="${this.colors.iconColor}">${this.titlePrefixIcon}</svg>`
       : "";
 
     const textX = this.titlePrefixIcon ? 25 : 0;
+    const maxTitleWidth = this.width - PADDING_X * 2 - textX;
+    const titleWidth = measureText(this.title, 18, true);
+    const overflows = titleWidth > maxTitleWidth;
 
-    return `
+    // Marquee: scroll long titles back and forth with pauses
+    if (overflows && !this.disableAnimations) {
+      const overflow = titleWidth - maxTitleWidth + 10; // 10px extra breathing room
+      const duration = Math.max(5, Math.min(10, overflow / 15));
+      const clipId = "title-clip";
+
+      const svg = `
       <g data-testid="card-title" transform="translate(${PADDING_X}, 35)">
         ${iconSvg}
-        <text x="${textX}" y="0" class="header" data-testid="header">${encodeHTML(this.title)}</text>
-      </g>
-    `;
+        <defs>
+          <clipPath id="${clipId}">
+            <rect x="${textX}" y="-18" width="${maxTitleWidth}" height="26" />
+          </clipPath>
+        </defs>
+        <g clip-path="url(#${clipId})">
+          <text x="${textX}" y="0" class="header marquee-title" data-testid="header">${encodeHTML(this.title)}</text>
+        </g>
+      </g>`;
+
+      const css = `
+      @keyframes titleMarquee {
+        0%, 20% { transform: translateX(0); }
+        45%, 55% { transform: translateX(-${overflow.toFixed(1)}px); }
+        80%, 100% { transform: translateX(0); }
+      }
+      .marquee-title {
+        animation: titleMarquee ${duration.toFixed(1)}s ease-in-out infinite;
+      }`;
+
+      return { svg, css };
+    }
+
+    // Fallback: truncate if animations are disabled
+    const displayTitle = overflows
+      ? truncateText(this.title, maxTitleWidth, 18, true)
+      : this.title;
+
+    const svg = `
+      <g data-testid="card-title" transform="translate(${PADDING_X}, 35)">
+        ${iconSvg}
+        <text x="${textX}" y="0" class="header" data-testid="header">${encodeHTML(displayTitle)}</text>
+      </g>`;
+
+    return { svg, css: "" };
   }
 
   private renderGradient(): string {
@@ -122,6 +168,7 @@ export class BaseCard {
       typeof this.colors.bgColor === "string" ? this.colors.bgColor : "url(#gradient)";
 
     const bodyY = this.hideTitle ? 35 : 55;
+    const titleInfo = this.computeTitle();
 
     return `
 <svg width="${this.width}" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="descId">
@@ -137,6 +184,7 @@ export class BaseCard {
       .header { font-size: 15.5px; }
     }
     ${this.renderAnimations()}
+    ${titleInfo.css}
     ${this.css}
   </style>
 
@@ -144,7 +192,7 @@ export class BaseCard {
 
   <rect data-testid="card-bg" x="0.5" y="0.5" rx="${this.borderRadius}" height="99%" width="${this.width - 1}" fill="${bgFill}" stroke="${this.colors.borderColor}" stroke-opacity="${this.hideBorder ? 0 : 1}" />
 
-  ${this.renderTitle()}
+  ${titleInfo.svg}
 
   <g data-testid="main-card-body" transform="translate(0, ${bodyY})">
     ${body}

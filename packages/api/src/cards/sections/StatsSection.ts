@@ -17,7 +17,7 @@ export const STAT_ICONS = {
 } as const;
 
 /** All hideable sections — stat rows + footer sections */
-export const HIDEABLE_STAT_KEYS = [
+const HIDEABLE_STAT_KEYS = [
   "total",
   "issuers",
   "skills",
@@ -27,7 +27,7 @@ export const HIDEABLE_STAT_KEYS = [
   "top_skills",
 ] as const;
 
-export type HideableStatKey = (typeof HIDEABLE_STAT_KEYS)[number];
+type HideableStatKey = (typeof HIDEABLE_STAT_KEYS)[number];
 
 interface StatRow {
   readonly key: HideableStatKey;

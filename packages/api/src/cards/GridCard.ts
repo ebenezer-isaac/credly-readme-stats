@@ -54,8 +54,8 @@ export function renderGridCard(
       const delay = 600 + i * 100;
 
       const imageHref = badge.imageBase64 ?? badge.imageUrl;
-      const truncatedName = truncateText(badge.name, cellWidth, 11);
-      const truncatedIssuer = truncateText(badge.issuerName, cellWidth, 10);
+      const truncatedName = truncateText(badge.name, cellWidth + GAP_X - 4, 11);
+      const truncatedIssuer = truncateText(badge.issuerName, cellWidth + GAP_X - 4, 10);
 
       let cellSvg = `
       <g class="stagger" style="animation-delay: ${delay}ms" transform="translate(${x}, ${y})">

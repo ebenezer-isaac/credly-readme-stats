@@ -3,7 +3,20 @@ import type { BaseCardOptions } from "../types/card.js";
 import { renderErrorCard } from "../cards/ErrorCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
 import { AppError, createErrorInfo, setErrorCacheHeaders } from "../middleware/index.js";
-import { parseBoolean, parseOptionalFloat, parseOptionalInt } from "../common/utils.js";
+import { parseBoolean, parseOptionalFloat, parseOptionalInt, isValidUsername } from "../common/utils.js";
+
+/** Valid sort values for cards with full sort support (grid, carousel, overview) */
+export const SORT_VALUES = ["recent", "oldest", "name", "issuer"] as const;
+
+/** Valid sort values for timeline (date-only sorting) */
+export const TIMELINE_SORT_VALUES = ["recent", "oldest"] as const;
+
+/** Validate username and throw AppError if invalid */
+export function validateUsername(username: string | undefined): asserts username is string {
+  if (!username || !isValidUsername(username)) {
+    throw new AppError("INVALID_USERNAME", `Invalid username: "${username}"`);
+  }
+}
 
 /** Parse shared base card options from query string. No type casts, no hacks. */
 export function parseBaseOptions(c: Context): BaseCardOptions {

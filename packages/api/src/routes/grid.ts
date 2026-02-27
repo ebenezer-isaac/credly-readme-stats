@@ -2,21 +2,17 @@ import { Hono } from "hono";
 import { renderGridCard } from "../cards/GridCard.js";
 import { getUserBadgeData } from "../fetchers/credlyFetcher.js";
 import { hydrateBadgeImages } from "../fetchers/imageFetcher.js";
-import { AppError, setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
-import { isValidUsername, parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
-import { parseBaseOptions, handleRouteError } from "./shared.js";
+import { setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
+import { parseOptionalBoolean, parseOptionalInt, parseEnum } from "../common/utils.js";
+import { parseBaseOptions, handleRouteError, validateUsername, SORT_VALUES } from "./shared.js";
 import type { GridCardOptions } from "../types/card.js";
-
-const GRID_SORT_VALUES = ["recent", "oldest", "name", "issuer"] as const;
 
 export const gridRoute = new Hono();
 
 gridRoute.get("/", async (c) => {
   try {
     const base = parseBaseOptions(c);
-    if (!base.username || !isValidUsername(base.username)) {
-      throw new AppError("INVALID_USERNAME", `Invalid username: "${base.username}"`);
-    }
+    validateUsername(base.username);
 
     const options: GridCardOptions = {
       ...base,
@@ -25,7 +21,7 @@ gridRoute.get("/", async (c) => {
       badge_size: parseOptionalInt(c.req.query("badge_size")),
       show_name: parseOptionalBoolean(c.req.query("show_name")),
       show_issuer: parseOptionalBoolean(c.req.query("show_issuer")),
-      sort: parseEnum(c.req.query("sort"), GRID_SORT_VALUES),
+      sort: parseEnum(c.req.query("sort"), SORT_VALUES),
       filter_issuer: c.req.query("filter_issuer"),
       filter_skill: c.req.query("filter_skill"),
       card_width: parseOptionalInt(c.req.query("card_width")),

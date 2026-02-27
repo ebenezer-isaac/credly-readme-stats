@@ -3,8 +3,8 @@ import { renderBadgeDetailCard } from "../cards/BadgeDetailCard.js";
 import { getUserBadgeData } from "../fetchers/credlyFetcher.js";
 import { hydrateBadgeImages } from "../fetchers/imageFetcher.js";
 import { AppError, setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
-import { isValidUsername, parseOptionalBoolean, parseOptionalInt } from "../common/utils.js";
-import { parseBaseOptions, handleRouteError } from "./shared.js";
+import { parseOptionalBoolean, parseOptionalInt } from "../common/utils.js";
+import { parseBaseOptions, handleRouteError, validateUsername } from "./shared.js";
 import type { BadgeDetailCardOptions } from "../types/card.js";
 
 export const badgeRoute = new Hono();
@@ -14,9 +14,7 @@ badgeRoute.get("/", async (c) => {
     const base = parseBaseOptions(c);
     const badgeId = c.req.query("badge_id");
 
-    if (!base.username || !isValidUsername(base.username)) {
-      throw new AppError("INVALID_USERNAME", `Invalid username: "${base.username}"`);
-    }
+    validateUsername(base.username);
     if (!badgeId) {
       throw new AppError("BADGE_NOT_FOUND", "badge_id parameter is required");
     }

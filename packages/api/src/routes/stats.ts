@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { renderStatsCard } from "../cards/StatsCard.js";
 import { getUserBadgeData } from "../fetchers/credlyFetcher.js";
-import { AppError, setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
-import { isValidUsername, parseOptionalBoolean, parseOptionalInt } from "../common/utils.js";
-import { parseBaseOptions, handleRouteError } from "./shared.js";
+import { setCacheHeaders, resolveCacheSeconds } from "../middleware/index.js";
+import { parseOptionalBoolean, parseOptionalInt } from "../common/utils.js";
+import { parseBaseOptions, handleRouteError, validateUsername } from "./shared.js";
 import type { StatsCardOptions } from "../types/card.js";
 
 export const statsRoute = new Hono();
@@ -11,9 +11,7 @@ export const statsRoute = new Hono();
 statsRoute.get("/", async (c) => {
   try {
     const base = parseBaseOptions(c);
-    if (!base.username || !isValidUsername(base.username)) {
-      throw new AppError("INVALID_USERNAME", `Invalid username: "${base.username}"`);
-    }
+    validateUsername(base.username);
 
     const options: StatsCardOptions = {
       ...base,

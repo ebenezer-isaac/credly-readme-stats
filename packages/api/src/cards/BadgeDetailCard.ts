@@ -26,11 +26,13 @@ export function renderBadgeDetailCard(
   let contentHeight = IMAGE_SIZE; // minimum: image height
   let textY = 20; // first line relative to content start
 
-  const nameText = truncateText(badge.name, maxTextWidth, 16);
-  textY += 18; // name line
+  const nameLines = wrapTextMultiline(badge.name, maxTextWidth, 16, 2);
+  textY += nameLines.length * 18;
 
+  let issuerLines: readonly string[] = [];
   if (showIssuer) {
-    textY += 16;
+    issuerLines = wrapTextMultiline(`by ${badge.issuerName}`, maxTextWidth, 14, 2);
+    textY += issuerLines.length * 16;
   }
 
   textY += 16; // issued date
@@ -55,15 +57,21 @@ export function renderBadgeDetailCard(
   // Build card body
   let body = `
     <g transform="translate(25, 5)">
-      <image href="${encodeHTML(imageHref)}" x="0" y="0" width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" />
-      <text x="${TEXT_START_X - 25}" y="20" class="badge-name">${encodeHTML(nameText)}</text>`;
+      <image href="${encodeHTML(imageHref)}" x="0" y="0" width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" />`;
 
-  let lineY = 20;
-
-  if (showIssuer) {
+  let lineY = 2;
+  for (const line of nameLines) {
     lineY += 18;
     body += `
-      <text x="${TEXT_START_X - 25}" y="${lineY}" class="badge-issuer">by ${encodeHTML(badge.issuerName)}</text>`;
+      <text x="${TEXT_START_X - 25}" y="${lineY}" class="badge-name">${encodeHTML(line)}</text>`;
+  }
+
+  if (showIssuer) {
+    for (const line of issuerLines) {
+      lineY += 16;
+      body += `
+      <text x="${TEXT_START_X - 25}" y="${lineY}" class="badge-issuer">${encodeHTML(line)}</text>`;
+    }
   }
 
   lineY += 18;

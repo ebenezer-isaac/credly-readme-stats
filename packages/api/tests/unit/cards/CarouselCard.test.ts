@@ -128,10 +128,10 @@ describe("renderCarouselCard", () => {
       const manyBadges = Array.from({ length: 20 }, (_, i) =>
         createMockBadge({ id: `badge-${i}`, name: `Badge ${i}` }),
       );
-      const svg = renderCarouselCard(manyBadges, defaultOptions({ max_items: 5 }));
-      // 5 badges + 3 duplicated = 8 <image> elements
+      const svg = renderCarouselCard(manyBadges, defaultOptions({ max_items: 8, visible_count: 3 }));
+      // 8 badges + 3 duplicated = 11 <image> elements
       const imageCount = (svg.match(/<image /g) ?? []).length;
-      expect(imageCount).toBe(8);
+      expect(imageCount).toBe(11);
     });
 
     it("filters by issuer", () => {

@@ -99,6 +99,7 @@ const CHAR_WIDTHS: Record<string, number> = {
   "|": 0.27,
   "}": 0.36,
   "~": 0.58,
+  "\u00B7": 0.33,  // middle dot (·) used in skill tags
 };
 
 const DEFAULT_CHAR_WIDTH = 0.55;
@@ -119,8 +120,8 @@ export function measureText(text: string, fontSize: number, bold = false): numbe
 /**
  * Truncate text with ellipsis if exceeding maxWidth pixels.
  */
-export function truncateText(text: string, maxWidthPx: number, fontSize: number): string {
-  if (measureText(text, fontSize) <= maxWidthPx) return text;
+export function truncateText(text: string, maxWidthPx: number, fontSize: number, bold = false): string {
+  if (measureText(text, fontSize, bold) <= maxWidthPx) return text;
 
   const ellipsis = "...";
   const ellipsisWidth = measureText(ellipsis, fontSize);

@@ -1,4 +1,4 @@
-export type CardType = "stats" | "grid" | "timeline";
+export type CardType = "stats" | "grid" | "timeline" | "carousel" | "overview";
 
 export interface BuilderState {
   readonly username: string;
@@ -29,6 +29,11 @@ export interface BuilderState {
   readonly max_items: number;
   readonly show_description: boolean;
   readonly show_skills: boolean;
+  // Carousel/Overview-specific
+  readonly visible_count: number;
+  readonly interval: number;
+  readonly filter_issuer: string;
+  readonly filter_skill: string;
 }
 
 export const DEFAULT_STATE: BuilderState = {
@@ -57,4 +62,8 @@ export const DEFAULT_STATE: BuilderState = {
   max_items: 6,
   show_description: false,
   show_skills: true,
+  visible_count: 5,
+  interval: 3,
+  filter_issuer: "",
+  filter_skill: "",
 };

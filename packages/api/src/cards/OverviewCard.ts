@@ -3,8 +3,7 @@ import { BaseCard, PADDING_X } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
 import { clamp, parseArray } from "../common/utils.js";
 import { sortBadges, filterBadges } from "../common/badgeFilters.js";
-import { buildStatsSection, STAT_ICONS } from "./sections/StatsSection.js";
-import { buildCarouselSection } from "./sections/CarouselSection.js";
+import { buildStatsSection, STAT_ICONS, buildCarouselSection } from "./sections/index.js";
 
 const DEFAULT_CARD_WIDTH = 550;
 const MIN_CARD_WIDTH = 350;
@@ -37,7 +36,7 @@ export function renderOverviewCard(
 
   // Build carousel section (unless hidden)
   if (!hideCarousel) {
-    const visibleCount = clamp(options.visible_count ?? 3, 1, 6);
+    const visibleCount = clamp(options.visible_count ?? 5, 1, 6);
     const badgeSize = clamp(options.badge_size ?? 64, 32, 128);
     const maxItems = clamp(options.max_items ?? 12, 3, 30);
 

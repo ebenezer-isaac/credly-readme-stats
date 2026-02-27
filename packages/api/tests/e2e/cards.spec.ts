@@ -339,6 +339,260 @@ test.describe("Timeline Card", () => {
   });
 });
 
+// ──────────────────────── Carousel Card ────────────────────────
+
+test.describe("Carousel Card", () => {
+  test("renders with default settings", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}`);
+    assertValidSvgStructure(svg);
+
+    // Should contain badge images (base64-encoded)
+    expect(svg).toContain("base64,");
+    expect(svg).toContain("Badge Carousel");
+  });
+
+  test("contains clip-path for carousel viewport", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}`);
+    expect(svg).toContain("clip-path");
+    expect(svg).toContain("clipPath");
+  });
+
+  test("contains CSS animation keyframes", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&visible_count=2`);
+    expect(svg).toContain("@keyframes c-slide");
+    expect(svg).toContain("animation:");
+  });
+
+  test("contains indicator dots when animated", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&visible_count=2`);
+    expect(svg).toContain("c-dot-0");
+    expect(svg).toContain("c-dot-1");
+  });
+
+  test("shows badge count footer", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&visible_count=3`);
+    // Should contain "X of Y badges"
+    expect(svg).toMatch(/\d+ of \d+ badges/);
+  });
+
+  test("respects badge_size parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&badge_size=96`);
+    expect(svg).toContain('width="96"');
+    expect(svg).toContain('height="96"');
+  });
+
+  test("respects visible_count parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&visible_count=2`);
+    expect(svg).toContain("2 of");
+  });
+
+  test("shows badge names by default", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}`);
+    expect(svg).toContain("c-badge-name");
+  });
+
+  test("hides badge names when show_name=false", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&show_name=false`);
+    expect(svg).not.toContain("c-badge-name");
+  });
+
+  test("shows issuer when show_issuer=true", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&show_issuer=true`);
+    expect(svg).toContain("c-badge-issuer");
+  });
+
+  test("hides issuer by default", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}`);
+    expect(svg).not.toContain("c-badge-issuer");
+  });
+
+  test("disables animations when requested", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&disable_animations=true`);
+    expect(svg).not.toContain("@keyframes c-slide");
+    expect(svg).not.toContain("@keyframes fadeIn");
+  });
+
+  test("renders with dark theme", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&theme=dark`);
+    assertValidSvgStructure(svg);
+    expect(svg).toContain("#fff");
+  });
+
+  test("uses custom title", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&custom_title=My+Carousel`);
+    expect(svg).toContain("My Carousel");
+  });
+
+  test("hides border when hide_border=true", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&hide_border=true`);
+    expect(svg).toContain('stroke-opacity="0"');
+  });
+
+  test("sets correct HTTP headers", async () => {
+    const { status, headers } = await fetchSvg(`/api/carousel?username=${USER}`);
+    expect(status).toBe(200);
+    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("cache-control")).toContain("max-age=");
+  });
+
+  test("supports sort parameter", async ({ page }) => {
+    const svgRecent = await loadSvg(page, `/api/carousel?username=${USER}&sort=recent`);
+    const svgName = await loadSvg(page, `/api/carousel?username=${USER}&sort=name`);
+    assertValidSvgStructure(svgRecent);
+    assertValidSvgStructure(svgName);
+  });
+
+  test("supports filter_issuer parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&filter_issuer=Amazon`);
+    assertValidSvgStructure(svg);
+    // Filtered results should have fewer badges
+    expect(svg).toMatch(/\d+ of \d+ badges/);
+  });
+
+  test("respects interval parameter in animation duration", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/carousel?username=${USER}&visible_count=2&interval=5`);
+    // Duration should reflect interval * badge count
+    expect(svg).toContain("animation:");
+  });
+});
+
+// ──────────────────────── Overview Card ────────────────────────
+
+test.describe("Overview Card", () => {
+  test("renders with default settings", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    assertValidSvgStructure(svg);
+
+    // Should contain both stats and carousel sections
+    expect(svg).toContain("Credly Overview");
+    expect(svg).toContain("Total Badges");
+    expect(svg).toContain("base64,"); // badge images in carousel
+  });
+
+  test("contains all stat rows", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    expect(svg).toContain("Total Badges");
+    expect(svg).toContain("Unique Issuers");
+    expect(svg).toContain("Unique Skills");
+    expect(svg).toContain("Active Badges");
+    expect(svg).toContain("Expiring Soon");
+    expect(svg).toContain("Top Issuers");
+    expect(svg).toContain("Top Skills");
+  });
+
+  test("contains carousel section with clip-path", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    expect(svg).toContain("clip-path");
+    expect(svg).toContain("clipPath");
+  });
+
+  test("uses 'oc' animation prefix (not 'c')", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&visible_count=2`);
+    // Overview uses "oc" prefix to avoid collision with standalone carousel
+    expect(svg).toContain("oc-slide");
+    expect(svg).toContain("oc-strip");
+  });
+
+  test("contains separator line between stats and carousel", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    expect(svg).toContain('stroke-opacity="0.4"');
+  });
+
+  test("default width is 550", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    expect(svg).toContain('width="550"');
+  });
+
+  test("respects card_width parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&card_width=700`);
+    expect(svg).toContain('width="700"');
+  });
+
+  test("hides stat sections when specified", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&hide=expiring,top_skills`);
+    expect(svg).not.toContain("Expiring Soon");
+    expect(svg).not.toContain("Top Skills");
+    expect(svg).toContain("Total Badges");
+  });
+
+  test("hides carousel when hide=carousel", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&hide=carousel`);
+    expect(svg).not.toContain("clip-path");
+    // Stats should still be present
+    expect(svg).toContain("Total Badges");
+  });
+
+  test("shows badge names in carousel by default", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}`);
+    expect(svg).toContain("oc-badge-name");
+  });
+
+  test("hides badge names when show_name=false", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&show_name=false`);
+    expect(svg).not.toContain("oc-badge-name");
+  });
+
+  test("shows issuer when show_issuer=true", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&show_issuer=true`);
+    expect(svg).toContain("oc-badge-issuer");
+  });
+
+  test("disables animations when requested", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&disable_animations=true`);
+    expect(svg).not.toContain("@keyframes fadeIn");
+    expect(svg).not.toContain("@keyframes oc-slide");
+  });
+
+  test("renders with dark theme", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&theme=dark`);
+    assertValidSvgStructure(svg);
+    expect(svg).toContain("#fff");
+  });
+
+  test("uses custom title", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&custom_title=My+Overview`);
+    expect(svg).toContain("My Overview");
+  });
+
+  test("hides border when hide_border=true", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&hide_border=true`);
+    expect(svg).toContain('stroke-opacity="0"');
+  });
+
+  test("sets correct HTTP headers", async () => {
+    const { status, headers } = await fetchSvg(`/api/overview?username=${USER}`);
+    expect(status).toBe(200);
+    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("cache-control")).toContain("max-age=");
+  });
+
+  test("SVG dimensions fit combined content", async ({ page }) => {
+    await loadSvg(page, `/api/overview?username=${USER}`);
+    const svgEl = await page.$("svg");
+    expect(svgEl).not.toBeNull();
+    const box = await svgEl!.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBe(550);
+    // Should be taller than stats-only card (stats ~350 + carousel ~200+)
+    expect(box!.height).toBeGreaterThan(300);
+  });
+
+  test("supports filter_issuer parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&filter_issuer=Amazon`);
+    assertValidSvgStructure(svg);
+  });
+
+  test("supports sort parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&sort=name`);
+    assertValidSvgStructure(svg);
+  });
+
+  test("respects badge_size parameter", async ({ page }) => {
+    const svg = await loadSvg(page, `/api/overview?username=${USER}&badge_size=96`);
+    expect(svg).toContain('width="96"');
+  });
+});
+
 // ──────────────────────── Badge Detail Card ────────────────────────
 
 test.describe("Badge Detail Card", () => {
@@ -393,6 +647,8 @@ test.describe("Error Cards", () => {
       "/api/stats?username=-",
       "/api/grid",
       "/api/timeline",
+      "/api/carousel",
+      "/api/overview",
       "/api/badge",
       `/api/badge?username=${USER}`,
     ];

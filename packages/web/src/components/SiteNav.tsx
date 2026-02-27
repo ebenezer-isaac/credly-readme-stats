@@ -1,4 +1,5 @@
 import { DarkModeToggle } from "./shared/DarkModeToggle";
+import { CREDLY_LOGO_URL, GITHUB_REPO_URL } from "../constants/config";
 
 const NAV_LINKS = [
   { href: "#builder", label: "Builder" },
@@ -11,10 +12,8 @@ export function SiteNav() {
     <header className="sticky top-0 z-50 border-b border-gray-200/60 bg-white/80 backdrop-blur-md dark:border-gray-800/60 dark:bg-gray-950/80">
       <nav className="section-container flex h-14 items-center justify-between">
         <a href="/" className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-white">
-          <svg className="h-6 w-6 text-brand-600" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          credly-readme-stats
+          <img src={CREDLY_LOGO_URL} alt="Credly" className="h-6" />
+          readme-stats
         </a>
 
         <div className="flex items-center gap-1">
@@ -28,7 +27,7 @@ export function SiteNav() {
             </a>
           ))}
           <a
-            href="https://github.com/ebenezer-isaac/credly-readme-stats"
+            href={GITHUB_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
