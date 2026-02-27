@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { DEFAULT_STATE, type BuilderState } from "../constants/defaults";
-import { API_BASE } from "../constants/config";
+import { API_BASE, EMBED_BASE } from "../constants/config";
 
 export function useCardUrl(state: BuilderState): string {
   return useMemo(() => {
@@ -79,10 +79,12 @@ export function useCardUrl(state: BuilderState): string {
 export function useEmbedCode(url: string, state: BuilderState): { markdown: string; html: string } {
   return useMemo(() => {
     if (!url) return { markdown: "", html: "" };
+    // Embed code always uses the absolute public URL so it works in GitHub READMEs
+    const embedUrl = url.replace(API_BASE, EMBED_BASE);
     const alt = state.custom_title || `${state.username}'s Credly ${state.cardType} card`;
     return {
-      markdown: `![${alt}](${url})`,
-      html: `<img src="${url}" alt="${alt}" />`,
+      markdown: `![${alt}](${embedUrl})`,
+      html: `<img src="${embedUrl}" alt="${alt}" />`,
     };
   }, [url, state.username, state.custom_title, state.cardType]);
 }
