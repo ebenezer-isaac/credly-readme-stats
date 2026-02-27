@@ -1,5 +1,5 @@
 import type { NormalizedBadge, CardColors, SectionResult } from "../../types/card.js";
-import { encodeHTML } from "../../common/utils.js";
+import { encodeHTML, encodeAttr } from "../../common/utils.js";
 import { truncateText } from "../../common/textMeasure.js";
 
 const GAP = 16;
@@ -119,8 +119,9 @@ export function buildCarouselSection(
       const truncatedIssuer = truncateText(badge.issuerName, cellWidth - 4, 10);
 
       let cellSvg = `
+        <a href="${encodeAttr(badge.credlyUrl)}" target="_blank">
         <g transform="translate(${x}, 0)">
-          <image href="${encodeHTML(imageHref)}" x="0" y="0" width="${badgeSize}" height="${badgeSize}" />`;
+          <image href="${encodeAttr(imageHref)}" x="0" y="0" width="${badgeSize}" height="${badgeSize}" />`;
 
       if (showName) {
         cellSvg += `
@@ -133,7 +134,7 @@ export function buildCarouselSection(
           <text x="${badgeSize / 2}" y="${iy}" text-anchor="middle" class="${p}-badge-issuer">${encodeHTML(truncatedIssuer)}</text>`;
       }
 
-      cellSvg += `\n        </g>`;
+      cellSvg += `\n        </g>\n        </a>`;
       return cellSvg;
     })
     .join("");

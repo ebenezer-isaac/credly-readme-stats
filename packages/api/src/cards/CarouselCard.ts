@@ -63,6 +63,7 @@ export function renderCarouselCard(
     disableAnimations: options.disable_animations,
     a11yTitle: title,
     a11yDesc: `Badge carousel showing ${Math.min(visibleCount, processed.length)} of ${processed.length} badges`,
+    titleUrl: options.profile_url,
   });
 
   const body = `

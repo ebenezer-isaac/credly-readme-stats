@@ -89,6 +89,7 @@ export function renderOverviewCard(
     disableAnimations: options.disable_animations,
     a11yTitle: title,
     a11yDesc: `Credly overview: ${stats.totalBadges} badges with carousel`,
+    titleUrl: options.profile_url,
   });
 
   const body = `

@@ -24,10 +24,11 @@ timelineRoute.get("/", async (c) => {
       card_width: parseOptionalInt(c.req.query("card_width")),
     };
 
-    const { badges, displayName } = await getUserBadgeData(base.username);
+    const { badges, displayName, profileUrl } = await getUserBadgeData(base.username);
     const svg = renderTimelineCard(badges, {
       ...options,
       custom_title: options.custom_title ?? `${displayName}'s Badge Timeline`,
+      profile_url: profileUrl,
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));

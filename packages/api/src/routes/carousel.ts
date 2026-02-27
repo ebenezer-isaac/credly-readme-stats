@@ -28,11 +28,12 @@ carouselRoute.get("/", async (c) => {
       max_items: parseOptionalInt(c.req.query("max_items")),
     };
 
-    const { badges, displayName } = await getUserBadgeData(base.username);
+    const { badges, displayName, profileUrl } = await getUserBadgeData(base.username);
     const hydratedBadges = await hydrateBadgeImages(badges);
     const svg = renderCarouselCard(hydratedBadges, {
       ...options,
       custom_title: options.custom_title ?? `${displayName}'s Badge Carousel`,
+      profile_url: profileUrl,
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));

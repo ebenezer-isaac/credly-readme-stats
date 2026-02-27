@@ -54,8 +54,7 @@ describe("normalizeBadge", () => {
     expect(result.issuedDate).toBe("2024-01-15");
     expect(result.expiresDate).toBeNull();
     expect(result.skills).toEqual(["Skill A", "Skill B"]);
-    expect(result.credlyUrl).toBe("https://www.credly.com/badges/tpl-001");
-    expect(result.vanitySlug).toBe("test-badge");
+    expect(result.credlyUrl).toBe("https://www.credly.com/badges/raw-001");
   });
 
   it("uses badge_template image_url as fallback", () => {

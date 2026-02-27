@@ -7,7 +7,7 @@ services:
     runtime: node
     region: oregon
     plan: free
-    buildCommand: npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter api build
+    buildCommand: npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter api build && pnpm --filter web build
     startCommand: node packages/api/dist/index.js
     envVars:
       - key: NODE_ENV

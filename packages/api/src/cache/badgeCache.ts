@@ -5,6 +5,7 @@ interface BadgeCacheValue {
   readonly badges: readonly NormalizedBadge[];
   readonly stats: BadgeStats;
   readonly displayName: string;
+  readonly profileUrl: string;
 }
 
 /** Badge data cache: 500 users, 6h TTL */

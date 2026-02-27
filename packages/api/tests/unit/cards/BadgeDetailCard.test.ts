@@ -38,7 +38,6 @@ describe("renderBadgeDetailCard", () => {
     it("shows badge image", () => {
       const svg = renderBadgeDetailCard(badge, defaultOptions());
       expect(svg).toContain("<image");
-      // Image href is HTML-encoded (/ -> &#x2F;)
       expect(svg).toContain("base64");
     });
 

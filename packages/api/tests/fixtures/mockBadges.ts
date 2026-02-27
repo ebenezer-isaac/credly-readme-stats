@@ -13,8 +13,7 @@ export function createMockBadge(overrides: Partial<NormalizedBadge> = {}): Norma
     expiresDate: null,
     skills: ["Cloud Computing", "AWS", "Architecture"],
     level: null,
-    credlyUrl: "https://www.credly.com/badges/test-badge",
-    vanitySlug: "aws-solutions-architect",
+    credlyUrl: "https://www.credly.com/badges/badge-001",
     ...overrides,
   };
 }

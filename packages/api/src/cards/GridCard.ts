@@ -1,7 +1,7 @@
 import type { NormalizedBadge, GridCardOptions } from "../types/card.js";
 import { BaseCard, PADDING_X } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
-import { encodeHTML, clamp } from "../common/utils.js";
+import { encodeHTML, encodeAttr, clamp } from "../common/utils.js";
 import { truncateText } from "../common/textMeasure.js";
 import { sortBadges, filterBadges } from "../common/badgeFilters.js";
 
@@ -58,8 +58,9 @@ export function renderGridCard(
       const truncatedIssuer = truncateText(badge.issuerName, cellWidth + GAP_X - 4, 10);
 
       let cellSvg = `
+      <a href="${encodeAttr(badge.credlyUrl)}" target="_blank">
       <g class="stagger" style="animation-delay: ${delay}ms" transform="translate(${x}, ${y})">
-        <image href="${encodeHTML(imageHref)}" x="0" y="0" width="${badgeSize}" height="${badgeSize}" />`;
+        <image href="${encodeAttr(imageHref)}" x="0" y="0" width="${badgeSize}" height="${badgeSize}" />`;
 
       if (showName) {
         cellSvg += `
@@ -72,7 +73,7 @@ export function renderGridCard(
         <text x="${cellWidth / 2}" y="${issuerY}" text-anchor="middle" class="badge-issuer">${encodeHTML(truncatedIssuer)}</text>`;
       }
 
-      cellSvg += `\n      </g>`;
+      cellSvg += `\n      </g>\n      </a>`;
       return cellSvg;
     })
     .join("");
@@ -91,6 +92,7 @@ export function renderGridCard(
     disableAnimations: options.disable_animations,
     a11yTitle: title,
     a11yDesc: `Badge grid showing ${pageBadges.length} of ${processed.length} badges`,
+    titleUrl: options.profile_url,
   });
 
   const css = `

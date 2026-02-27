@@ -44,6 +44,7 @@ export function renderStatsCard(stats: BadgeStats, options: StatsCardOptions): s
     disableAnimations: options.disable_animations,
     a11yTitle: title,
     a11yDesc: `Credly stats: ${stats.totalBadges} badges, ${stats.uniqueIssuers.length} issuers, ${stats.totalSkills} skills`,
+    titleUrl: options.profile_url,
   });
 
   return card.withCSS(section.css).render(section.svg);

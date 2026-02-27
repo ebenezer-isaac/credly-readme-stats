@@ -158,7 +158,7 @@ describe("renderGridCard", () => {
   describe("image embedding", () => {
     it("uses base64 image when available", () => {
       const svg = renderGridCard(badges, defaultOptions());
-      expect(svg).toContain("data:image&#x2F;png;base64");
+      expect(svg).toContain("data:image/png;base64");
     });
 
     it("falls back to image URL when no base64", () => {

@@ -28,11 +28,12 @@ gridRoute.get("/", async (c) => {
       page: parseOptionalInt(c.req.query("page")),
     };
 
-    const { badges, displayName } = await getUserBadgeData(base.username);
+    const { badges, displayName, profileUrl } = await getUserBadgeData(base.username);
     const hydratedBadges = await hydrateBadgeImages(badges);
     const svg = renderGridCard(hydratedBadges, {
       ...options,
       custom_title: options.custom_title ?? `${displayName}'s Badges`,
+      profile_url: profileUrl,
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));

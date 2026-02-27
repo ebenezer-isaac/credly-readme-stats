@@ -117,8 +117,7 @@ export function normalizeBadge(raw: CredlyBadge): NormalizedBadge {
     expiresDate: raw.expires_at_date,
     skills: raw.badge_template.skills.map((s) => s.name),
     level: raw.badge_template.level,
-    credlyUrl: raw.badge_template.url,
-    vanitySlug: raw.badge_template.vanity_slug,
+    credlyUrl: `https://www.credly.com/badges/${raw.id}`,
   };
 }
 
@@ -189,6 +188,7 @@ export interface UserBadgeData {
   readonly badges: readonly NormalizedBadge[];
   readonly stats: BadgeStats;
   readonly displayName: string;
+  readonly profileUrl: string;
 }
 
 /**
@@ -205,8 +205,9 @@ export async function getUserBadgeData(username: string): Promise<UserBadgeData>
   const badges = rawBadges.map(normalizeBadge);
   const stats = computeStats(badges);
   const displayName = rawBadges[0]?.issued_to ?? username;
+  const profileUrl = `${CREDLY_BASE_URL}/${encodeURIComponent(username)}/badges`;
 
-  const result: UserBadgeData = { badges, stats, displayName };
+  const result: UserBadgeData = { badges, stats, displayName, profileUrl };
   badgeCache.set(cacheKey, result);
 
   return result;

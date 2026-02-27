@@ -28,7 +28,7 @@ badgeRoute.get("/", async (c) => {
       card_width: parseOptionalInt(c.req.query("card_width")),
     };
 
-    const { badges } = await getUserBadgeData(base.username);
+    const { badges, profileUrl } = await getUserBadgeData(base.username);
     const target = badges.find((b) => b.id === badgeId);
     if (!target) {
       throw new AppError("BADGE_NOT_FOUND", `Badge "${badgeId}" not found for user "${base.username}"`);
@@ -39,7 +39,10 @@ badgeRoute.get("/", async (c) => {
     if (!hydratedBadge) {
       throw new AppError("CREDLY_API_ERROR", "Failed to process badge image");
     }
-    const svg = renderBadgeDetailCard(hydratedBadge, options);
+    const svg = renderBadgeDetailCard(hydratedBadge, {
+      ...options,
+      profile_url: profileUrl,
+    });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));
     c.header("Content-Type", "image/svg+xml");

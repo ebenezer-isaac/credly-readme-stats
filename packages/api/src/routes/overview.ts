@@ -31,11 +31,12 @@ overviewRoute.get("/", async (c) => {
       card_width: parseOptionalInt(c.req.query("card_width")),
     };
 
-    const { badges, stats, displayName } = await getUserBadgeData(base.username);
+    const { badges, stats, displayName, profileUrl } = await getUserBadgeData(base.username);
     const hydratedBadges = await hydrateBadgeImages(badges);
     const svg = renderOverviewCard(stats, hydratedBadges, {
       ...options,
       custom_title: options.custom_title ?? `${displayName}'s Credly Overview`,
+      profile_url: profileUrl,
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));

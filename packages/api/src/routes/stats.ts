@@ -21,10 +21,11 @@ statsRoute.get("/", async (c) => {
       line_height: parseOptionalInt(c.req.query("line_height")),
     };
 
-    const { stats, displayName } = await getUserBadgeData(base.username);
+    const { stats, displayName, profileUrl } = await getUserBadgeData(base.username);
     const svg = renderStatsCard(stats, {
       ...options,
       custom_title: options.custom_title ?? `${displayName}'s Credly Stats`,
+      profile_url: profileUrl,
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));

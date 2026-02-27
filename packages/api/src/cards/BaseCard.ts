@@ -1,5 +1,5 @@
 import type { BaseCardConfig, CardColors } from "../types/card.js";
-import { encodeHTML } from "../common/utils.js";
+import { encodeHTML, encodeAttr } from "../common/utils.js";
 import { measureText, truncateText } from "../common/textMeasure.js";
 
 export const PADDING_X = 25;
@@ -22,6 +22,7 @@ export class BaseCard {
   private readonly disableAnimations: boolean;
   private readonly a11yTitle: string;
   private readonly a11yDesc: string;
+  private readonly titleUrl: string | undefined;
   private readonly css: string;
 
   constructor(config: BaseCardConfig, css = "") {
@@ -36,6 +37,7 @@ export class BaseCard {
     this.disableAnimations = config.disableAnimations ?? false;
     this.a11yTitle = config.a11yTitle ?? this.title;
     this.a11yDesc = config.a11yDesc ?? "";
+    this.titleUrl = config.titleUrl;
     this.css = css;
   }
 
@@ -54,6 +56,7 @@ export class BaseCard {
         disableAnimations: this.disableAnimations,
         a11yTitle: this.a11yTitle,
         a11yDesc: this.a11yDesc,
+        titleUrl: this.titleUrl,
       },
       css,
     );
@@ -75,13 +78,18 @@ export class BaseCard {
     const titleWidth = measureText(this.title, 18, true);
     const overflows = titleWidth > maxTitleWidth;
 
+    const wrapLink = (inner: string): string =>
+      this.titleUrl
+        ? `<a href="${encodeAttr(this.titleUrl)}" target="_blank" class="title-link">${inner}</a>`
+        : inner;
+
     // Marquee: scroll long titles back and forth with pauses
     if (overflows && !this.disableAnimations) {
       const overflow = titleWidth - maxTitleWidth + 10; // 10px extra breathing room
       const duration = Math.max(5, Math.min(10, overflow / 15));
       const clipId = "title-clip";
 
-      const svg = `
+      const titleContent = `
       <g data-testid="card-title" transform="translate(${PADDING_X}, 35)">
         ${iconSvg}
         <defs>
@@ -102,9 +110,10 @@ export class BaseCard {
       }
       .marquee-title {
         animation: titleMarquee ${duration.toFixed(1)}s ease-in-out infinite;
-      }`;
+      }
+      ${this.titleUrl ? ".title-link { cursor: pointer; }" : ""}`;
 
-      return { svg, css };
+      return { svg: wrapLink(titleContent), css };
     }
 
     // Fallback: truncate if animations are disabled
@@ -112,13 +121,14 @@ export class BaseCard {
       ? truncateText(this.title, maxTitleWidth, 18, true)
       : this.title;
 
-    const svg = `
+    const titleContent = `
       <g data-testid="card-title" transform="translate(${PADDING_X}, 35)">
         ${iconSvg}
         <text x="${textX}" y="0" class="header" data-testid="header">${encodeHTML(displayTitle)}</text>
       </g>`;
 
-    return { svg, css: "" };
+    const titleCss = this.titleUrl ? ".title-link { cursor: pointer; }" : "";
+    return { svg: wrapLink(titleContent), css: titleCss };
   }
 
   private renderGradient(): string {

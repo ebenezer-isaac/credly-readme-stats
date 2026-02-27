@@ -24,6 +24,7 @@ export interface BaseCardOptions {
   readonly border_radius?: number;
   readonly disable_animations?: boolean;
   readonly cache_seconds?: number;
+  readonly profile_url?: string;
 }
 
 /** Stats card specific options */
@@ -81,7 +82,6 @@ export interface NormalizedBadge {
   readonly skills: readonly string[];
   readonly level: string | null;
   readonly credlyUrl: string;
-  readonly vanitySlug: string;
 }
 
 /** Stats computed from badge collection */
@@ -149,4 +149,5 @@ export interface BaseCardConfig {
   readonly disableAnimations?: boolean;
   readonly a11yTitle?: string;
   readonly a11yDesc?: string;
+  readonly titleUrl?: string;
 }

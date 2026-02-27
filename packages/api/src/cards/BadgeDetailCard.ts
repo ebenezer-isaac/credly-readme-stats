@@ -1,7 +1,7 @@
 import type { NormalizedBadge, BadgeDetailCardOptions } from "../types/card.js";
 import { BaseCard, PADDING_X } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
-import { encodeHTML, clamp, formatDate } from "../common/utils.js";
+import { encodeHTML, encodeAttr, clamp, formatDate } from "../common/utils.js";
 import { truncateText, wrapTextMultiline } from "../common/textMeasure.js";
 
 const IMAGE_SIZE = 64;
@@ -56,8 +56,9 @@ export function renderBadgeDetailCard(
 
   // Build card body
   let body = `
+    <a href="${encodeAttr(badge.credlyUrl)}" target="_blank">
     <g transform="translate(25, 5)">
-      <image href="${encodeHTML(imageHref)}" x="0" y="0" width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" />`;
+      <image href="${encodeAttr(imageHref)}" x="0" y="0" width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" />`;
 
   let lineY = 2;
   for (const line of nameLines) {
@@ -104,7 +105,8 @@ export function renderBadgeDetailCard(
   }
 
   body += `
-    </g>`;
+    </g>
+    </a>`;
 
   const title = options.custom_title ?? badge.name;
 
@@ -120,6 +122,7 @@ export function renderBadgeDetailCard(
     disableAnimations: options.disable_animations,
     a11yTitle: badge.name,
     a11yDesc: `${badge.name} by ${badge.issuerName}, issued ${formatDate(badge.issuedDate)}`,
+    titleUrl: options.profile_url,
   });
 
   const css = `

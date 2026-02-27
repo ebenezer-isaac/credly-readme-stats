@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   encodeHTML,
+  encodeAttr,
   clamp,
   parseArray,
   parseBoolean,
@@ -36,6 +37,36 @@ describe("encodeHTML", () => {
 
   it("handles empty string", () => {
     expect(encodeHTML("")).toBe("");
+  });
+});
+
+describe("encodeAttr", () => {
+  it("escapes only XML attribute-unsafe characters", () => {
+    expect(encodeAttr("&")).toBe("&amp;");
+    expect(encodeAttr("<")).toBe("&lt;");
+    expect(encodeAttr(">")).toBe("&gt;");
+    expect(encodeAttr('"')).toBe("&quot;");
+  });
+
+  it("preserves URL-safe characters", () => {
+    expect(encodeAttr("/")).toBe("/");
+    expect(encodeAttr("'")).toBe("'");
+    expect(encodeAttr("`")).toBe("`");
+  });
+
+  it("preserves full URLs", () => {
+    expect(encodeAttr("https://www.credly.com/badges/abc-123")).toBe(
+      "https://www.credly.com/badges/abc-123",
+    );
+  });
+
+  it("preserves data URIs with base64", () => {
+    const dataUri = "data:image/png;base64,iVBORw0KGgo=";
+    expect(encodeAttr(dataUri)).toBe(dataUri);
+  });
+
+  it("handles empty string", () => {
+    expect(encodeAttr("")).toBe("");
   });
 });
 

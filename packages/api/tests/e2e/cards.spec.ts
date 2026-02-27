@@ -201,7 +201,6 @@ test.describe("Grid Card", () => {
     const svg = await loadSvg(page, `/api/grid?username=${USER}`);
     assertValidSvgStructure(svg);
 
-    // Should contain badge images as base64 (/ is HTML-encoded as &#x2F; by encodeHTML)
     expect(svg).toContain("base64,");
     // Should use display name
     expect(svg).toContain("Badges");
@@ -211,7 +210,6 @@ test.describe("Grid Card", () => {
     const svg = await loadSvg(page, `/api/grid?username=${USER}&columns=4&rows=3`);
     assertValidSvgStructure(svg);
 
-    // Count badge images (/ encoded as &#x2F; by encodeHTML)
     const imageCount = (svg.match(/base64,/g) ?? []).length;
     expect(imageCount).toBeLessThanOrEqual(12); // 4 * 3 max
     expect(imageCount).toBeGreaterThan(0);

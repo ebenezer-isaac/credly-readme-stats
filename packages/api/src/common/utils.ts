@@ -13,6 +13,11 @@ export function encodeHTML(str: string): string {
   return str.replace(/[&<>"'`/]/g, (char) => HTML_ENTITIES[char] ?? char);
 }
 
+/** Escape only characters that are unsafe in XML/SVG attribute values (preserves URLs) */
+export function encodeAttr(str: string): string {
+  return str.replace(/[&<>"]/g, (char) => HTML_ENTITIES[char] ?? char);
+}
+
 /** Clamp a number between min and max */
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);

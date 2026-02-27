@@ -1,5 +1,6 @@
 export {
   encodeHTML,
+  encodeAttr,
   clamp,
   parseArray,
   parseBoolean,

@@ -1,7 +1,7 @@
 import type { NormalizedBadge, TimelineCardOptions } from "../types/card.js";
 import { BaseCard, PADDING_X } from "./BaseCard.js";
 import { getCardColors } from "../themes/resolveTheme.js";
-import { encodeHTML, clamp, formatDate } from "../common/utils.js";
+import { encodeHTML, encodeAttr, clamp, formatDate } from "../common/utils.js";
 import { truncateText } from "../common/textMeasure.js";
 import { sortBadges, filterBadges } from "../common/badgeFilters.js";
 
@@ -66,6 +66,7 @@ export function renderTimelineCard(
       const issuerText = truncateText(`by ${badge.issuerName}`, maxTextWidth, 12);
 
       let entrySvg = `
+      <a href="${encodeAttr(badge.credlyUrl)}" target="_blank">
       <g class="stagger" style="animation-delay: ${delay}ms" transform="translate(0, ${y})">
         <circle cx="${SPINE_X}" cy="0" r="${NODE_RADIUS}" fill="${colors.iconColor}" />
         <text x="${CONTENT_X}" y="4" class="timeline-date">${encodeHTML(dateText)}</text>
@@ -88,7 +89,7 @@ export function renderTimelineCard(
         <text x="${CONTENT_X}" y="${extraY}" class="timeline-desc">${encodeHTML(descText)}</text>`;
       }
 
-      entrySvg += `\n      </g>`;
+      entrySvg += `\n      </g>\n      </a>`;
       return entrySvg;
     })
     .join("");
@@ -116,6 +117,7 @@ export function renderTimelineCard(
     disableAnimations: options.disable_animations,
     a11yTitle: title,
     a11yDesc: `Timeline showing ${displayBadges.length} badges`,
+    titleUrl: options.profile_url,
   });
 
   const css = `

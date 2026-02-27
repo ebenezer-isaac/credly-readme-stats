@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const BASE = "http://localhost:3001";
+const BASE = process.env.BASE_URL ?? "http://localhost:3001";
 const USER = "ebenezer-isaac.05496d7f";
 const OUT = "packages/api/tests/e2e/screenshots";
 
