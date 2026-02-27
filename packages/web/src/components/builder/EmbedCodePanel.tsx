@@ -9,7 +9,7 @@ interface EmbedCodePanelProps {
 type EmbedFormat = "markdown" | "html";
 
 export function EmbedCodePanel({ markdown, html }: EmbedCodePanelProps) {
-  const [format, setFormat] = useState<EmbedFormat>("markdown");
+  const [format, setFormat] = useState<EmbedFormat>("html");
   const code = format === "markdown" ? markdown : html;
 
   if (!markdown) return null;

@@ -50,7 +50,7 @@ export function handleRouteError(err: unknown, c: Context): Response {
     const colors = getCardColors({ username: "", theme: c.req.query("theme") });
     return new Response(renderErrorCard(errorInfo, colors), {
       status: err.statusCode,
-      headers: { "Content-Type": "image/svg+xml" },
+      headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
     });
   }
 
@@ -58,6 +58,6 @@ export function handleRouteError(err: unknown, c: Context): Response {
   const errorInfo = createErrorInfo("INTERNAL_ERROR");
   return new Response(renderErrorCard(errorInfo), {
     status: 500,
-    headers: { "Content-Type": "image/svg+xml" },
+    headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
   });
 }

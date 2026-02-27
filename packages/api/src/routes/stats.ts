@@ -29,7 +29,7 @@ statsRoute.get("/", async (c) => {
     });
 
     setCacheHeaders(c, resolveCacheSeconds(options.cache_seconds));
-    c.header("Content-Type", "image/svg+xml");
+    c.header("Content-Type", "image/svg+xml; charset=utf-8");
     return c.body(svg);
   } catch (err) {
     return handleRouteError(err, c);

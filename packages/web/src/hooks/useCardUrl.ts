@@ -82,9 +82,10 @@ export function useEmbedCode(url: string, state: BuilderState): { markdown: stri
     // Embed code always uses the absolute public URL so it works in GitHub READMEs
     const embedUrl = url.replace(API_BASE, EMBED_BASE);
     const alt = state.custom_title || `${state.username}'s Credly ${state.cardType} card`;
+    const profileUrl = `https://www.credly.com/users/${encodeURIComponent(state.username)}/badges`;
     return {
-      markdown: `![${alt}](${embedUrl})`,
-      html: `<img src="${embedUrl}" alt="${alt}" />`,
+      markdown: `[![${alt}](${embedUrl})](${profileUrl})`,
+      html: `<a href="${profileUrl}">\n  <img src="${embedUrl}" alt="${alt}" />\n</a>`,
     };
   }, [url, state.username, state.custom_title, state.cardType]);
 }
