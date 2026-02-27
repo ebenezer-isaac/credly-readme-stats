@@ -1,7 +1,11 @@
 <div align="center">
 
 <!-- Logo / Title -->
-<img src="https://img.icons8.com/color/96/badge.png" width="80" alt="Credly Readme Stats" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://credly-readme-stats.onrender.com/api/stats?username=ebenezer-isaac.05496d7f&theme=github_dark&hide=issuers,skills,active,expiring,top_issuers,top_skills&hide_border=true&custom_title=credly-readme-stats&card_width=350" />
+  <source media="(prefers-color-scheme: light)" srcset="https://credly-readme-stats.onrender.com/api/stats?username=ebenezer-isaac.05496d7f&theme=github_light&hide=issuers,skills,active,expiring,top_issuers,top_skills&hide_border=true&custom_title=credly-readme-stats&card_width=350" />
+  <img src="https://credly-readme-stats.onrender.com/api/stats?username=ebenezer-isaac.05496d7f&hide=issuers,skills,active,expiring,top_issuers,top_skills&hide_border=true&custom_title=credly-readme-stats&card_width=350" alt="credly-readme-stats" />
+</picture>
 
 # credly-readme-stats
 
