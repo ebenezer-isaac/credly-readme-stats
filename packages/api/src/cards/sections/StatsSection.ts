@@ -17,6 +17,7 @@ export const STAT_ICONS = {
 } as const;
 
 /** All hideable sections — stat rows + footer sections */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- used to derive HideableStatKey type
 const HIDEABLE_STAT_KEYS = [
   "total",
   "issuers",

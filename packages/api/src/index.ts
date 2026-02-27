@@ -43,6 +43,7 @@ app.use("/*", serveStatic({ root: "packages/web/dist", path: "index.html" }));
 
 const port = parseInt(process.env["PORT"] ?? "3000", 10);
 
+// eslint-disable-next-line no-console -- startup log
 console.log(`credly-readme-stats running on port ${port}`);
 
 serve({ fetch: app.fetch, port });
