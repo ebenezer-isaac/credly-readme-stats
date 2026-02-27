@@ -97,6 +97,44 @@ export interface BadgeStats {
   readonly topSkills: readonly { readonly name: string; readonly count: number }[];
 }
 
+/** Result of building a reusable card section */
+export interface SectionResult {
+  readonly svg: string;
+  readonly css: string;
+  readonly height: number;
+}
+
+/** Carousel card specific options */
+export interface CarouselCardOptions extends BaseCardOptions {
+  readonly visible_count?: number;
+  readonly badge_size?: number;
+  readonly show_name?: boolean;
+  readonly show_issuer?: boolean;
+  readonly interval?: number;
+  readonly sort?: "recent" | "oldest" | "name" | "issuer";
+  readonly filter_issuer?: string;
+  readonly filter_skill?: string;
+  readonly card_width?: number;
+  readonly max_items?: number;
+}
+
+/** Combined stats + carousel card options */
+export interface OverviewCardOptions extends BaseCardOptions {
+  readonly show_icons?: boolean;
+  readonly hide?: string;
+  readonly line_height?: number;
+  readonly visible_count?: number;
+  readonly badge_size?: number;
+  readonly show_name?: boolean;
+  readonly show_issuer?: boolean;
+  readonly interval?: number;
+  readonly sort?: "recent" | "oldest" | "name" | "issuer";
+  readonly filter_issuer?: string;
+  readonly filter_skill?: string;
+  readonly max_items?: number;
+  readonly card_width?: number;
+}
+
 /** BaseCard constructor config */
 export interface BaseCardConfig {
   readonly width: number;

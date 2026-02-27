@@ -37,6 +37,8 @@ const { statsRoute } = await import("../../src/routes/stats.js");
 const { gridRoute } = await import("../../src/routes/grid.js");
 const { timelineRoute } = await import("../../src/routes/timeline.js");
 const { badgeRoute } = await import("../../src/routes/badge.js");
+const { carouselRoute } = await import("../../src/routes/carousel.js");
+const { overviewRoute } = await import("../../src/routes/overview.js");
 const { healthRoute } = await import("../../src/routes/health.js");
 
 function createApp() {
@@ -45,6 +47,8 @@ function createApp() {
   app.route("/api/grid", gridRoute);
   app.route("/api/timeline", timelineRoute);
   app.route("/api/badge", badgeRoute);
+  app.route("/api/carousel", carouselRoute);
+  app.route("/api/overview", overviewRoute);
   app.route("/health", healthRoute);
   return app;
 }
@@ -182,6 +186,59 @@ describe("Route Integration Tests", () => {
     });
   });
 
+  describe("GET /api/carousel", () => {
+    it("returns SVG with valid username", async () => {
+      const res = await app.request("/api/carousel?username=testuser");
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      assertValidSvg(await res.text());
+    });
+
+    it("returns error SVG for missing username", async () => {
+      const res = await app.request("/api/carousel");
+      expect(res.status).toBe(400);
+      assertValidSvg(await res.text());
+    });
+
+    it("accepts carousel-specific parameters", async () => {
+      const res = await app.request(
+        "/api/carousel?username=testuser&visible_count=4&badge_size=96&interval=5&sort=name",
+      );
+      expect(res.status).toBe(200);
+      assertValidSvg(await res.text());
+    });
+  });
+
+  describe("GET /api/overview", () => {
+    it("returns SVG with valid username", async () => {
+      const res = await app.request("/api/overview?username=testuser");
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      assertValidSvg(await res.text());
+    });
+
+    it("returns error SVG for missing username", async () => {
+      const res = await app.request("/api/overview");
+      expect(res.status).toBe(400);
+      assertValidSvg(await res.text());
+    });
+
+    it("contains both stats and carousel content", async () => {
+      const res = await app.request("/api/overview?username=testuser");
+      const svg = await res.text();
+      expect(svg).toContain("Total Badges");
+      expect(svg).toContain("clip-path");
+    });
+
+    it("accepts overview-specific parameters", async () => {
+      const res = await app.request(
+        "/api/overview?username=testuser&visible_count=2&hide=expiring&interval=5",
+      );
+      expect(res.status).toBe(200);
+      assertValidSvg(await res.text());
+    });
+  });
+
   describe("GET /health", () => {
     it("returns JSON health status", async () => {
       const res = await app.request("/health");
@@ -201,6 +258,8 @@ describe("Route Integration Tests", () => {
         "/api/timeline",
         "/api/badge",
         "/api/badge?username=testuser",
+        "/api/carousel",
+        "/api/overview",
       ];
 
       for (const path of errorRequests) {

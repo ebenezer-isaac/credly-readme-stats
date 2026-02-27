@@ -5,6 +5,8 @@ import { statsRoute } from "./routes/stats.js";
 import { gridRoute } from "./routes/grid.js";
 import { timelineRoute } from "./routes/timeline.js";
 import { badgeRoute } from "./routes/badge.js";
+import { carouselRoute } from "./routes/carousel.js";
+import { overviewRoute } from "./routes/overview.js";
 import { healthRoute } from "./routes/health.js";
 import { createRateLimiter } from "./middleware/rateLimiter.js";
 
@@ -19,6 +21,8 @@ app.route("/api/stats", statsRoute);
 app.route("/api/grid", gridRoute);
 app.route("/api/timeline", timelineRoute);
 app.route("/api/badge", badgeRoute);
+app.route("/api/carousel", carouselRoute);
+app.route("/api/overview", overviewRoute);
 app.route("/health", healthRoute);
 
 // Root redirect
@@ -32,6 +36,8 @@ app.get("/", (c) => {
       grid: "/api/grid?username=YOUR_USERNAME",
       timeline: "/api/timeline?username=YOUR_USERNAME",
       badge: "/api/badge?username=YOUR_USERNAME&badge_id=BADGE_ID",
+      carousel: "/api/carousel?username=YOUR_USERNAME",
+      overview: "/api/overview?username=YOUR_USERNAME",
       health: "/health",
     },
   });
