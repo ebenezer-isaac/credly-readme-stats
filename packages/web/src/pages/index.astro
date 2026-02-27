@@ -1,0 +1,9 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { LandingPage } from "../components/LandingPage";
+import "../styles/global.css";
+---
+
+<BaseLayout>
+  <LandingPage client:load />
+</BaseLayout>

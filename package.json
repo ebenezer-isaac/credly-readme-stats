@@ -1,0 +1,35 @@
+{
+  "name": "credly-readme-stats",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dynamic SVG cards for your Credly badges — embed in any GitHub README",
+  "license": "MIT",
+  "author": "Ebenezer Adebiyi",
+  "scripts": {
+    "dev": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter api build && pnpm --filter web build",
+    "build:api": "pnpm --filter api build",
+    "build:web": "pnpm --filter web build",
+    "start": "pnpm --filter api start",
+    "test": "pnpm --filter api test",
+    "test:coverage": "pnpm --filter api test:coverage",
+    "lint": "pnpm --filter api lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "playwright": "^1.58.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

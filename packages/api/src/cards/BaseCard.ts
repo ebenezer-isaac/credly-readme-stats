@@ -1,0 +1,154 @@
+import type { BaseCardConfig, CardColors } from "../types/card.js";
+import { encodeHTML } from "../common/utils.js";
+
+export const PADDING_X = 25;
+
+/**
+ * Base SVG card class. Wraps card body in consistent SVG envelope
+ * with background, border, title, animations, and accessibility.
+ *
+ * Immutable — use withCSS() to produce a new instance with custom CSS.
+ */
+export class BaseCard {
+  readonly width: number;
+  readonly height: number;
+  private readonly borderRadius: number;
+  private readonly colors: CardColors;
+  private readonly title: string;
+  private readonly titlePrefixIcon: string | undefined;
+  private readonly hideBorder: boolean;
+  private readonly hideTitle: boolean;
+  private readonly disableAnimations: boolean;
+  private readonly a11yTitle: string;
+  private readonly a11yDesc: string;
+  private readonly css: string;
+
+  constructor(config: BaseCardConfig, css = "") {
+    this.width = config.width;
+    this.height = config.height;
+    this.borderRadius = config.borderRadius ?? 4.5;
+    this.colors = config.colors;
+    this.title = config.customTitle ?? config.defaultTitle ?? "";
+    this.titlePrefixIcon = config.titlePrefixIcon;
+    this.hideBorder = config.hideBorder ?? false;
+    this.hideTitle = config.hideTitle ?? false;
+    this.disableAnimations = config.disableAnimations ?? false;
+    this.a11yTitle = config.a11yTitle ?? this.title;
+    this.a11yDesc = config.a11yDesc ?? "";
+    this.css = css;
+  }
+
+  /** Produce a new BaseCard with additional CSS injected */
+  withCSS(css: string): BaseCard {
+    return new BaseCard(
+      {
+        width: this.width,
+        height: this.height,
+        borderRadius: this.borderRadius,
+        colors: this.colors,
+        customTitle: this.title,
+        titlePrefixIcon: this.titlePrefixIcon,
+        hideBorder: this.hideBorder,
+        hideTitle: this.hideTitle,
+        disableAnimations: this.disableAnimations,
+        a11yTitle: this.a11yTitle,
+        a11yDesc: this.a11yDesc,
+      },
+      css,
+    );
+  }
+
+  private renderTitle(): string {
+    if (this.hideTitle) return "";
+
+    const iconSvg = this.titlePrefixIcon
+      ? `<svg class="icon" x="0" y="-13" viewBox="0 0 16 16" width="16" height="16" fill="${this.colors.iconColor}">${this.titlePrefixIcon}</svg>`
+      : "";
+
+    const textX = this.titlePrefixIcon ? 25 : 0;
+
+    return `
+      <g data-testid="card-title" transform="translate(${PADDING_X}, 35)">
+        ${iconSvg}
+        <text x="${textX}" y="0" class="header" data-testid="header">${encodeHTML(this.title)}</text>
+      </g>
+    `;
+  }
+
+  private renderGradient(): string {
+    const bg = this.colors.bgColor;
+    if (typeof bg === "string") return "";
+
+    const [angle, ...colors] = bg;
+    if (!angle || colors.length === 0) return "";
+
+    const stops = colors
+      .map((color, i) => {
+        const offset = colors.length === 1 ? 0 : (i / (colors.length - 1)) * 100;
+        return `<stop offset="${offset}%" stop-color="${color}" />`;
+      })
+      .join("\n        ");
+
+    return `
+      <defs>
+        <linearGradient id="gradient" gradientTransform="rotate(${angle})" gradientUnits="userSpaceOnUse">
+          ${stops}
+        </linearGradient>
+      </defs>
+    `;
+  }
+
+  private renderAnimations(): string {
+    if (this.disableAnimations) return "";
+
+    return `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+      .fade-in { animation: fadeIn 0.3s ease-in forwards; }
+      .scale-in { animation: scaleIn 0.3s ease-in forwards; }
+      .stagger { opacity: 0; animation: fadeIn 0.3s ease-in forwards; }
+    `;
+  }
+
+  /** Render complete SVG wrapping the body content */
+  render(body: string): string {
+    const bgFill =
+      typeof this.colors.bgColor === "string" ? this.colors.bgColor : "url(#gradient)";
+
+    const bodyY = this.hideTitle ? 35 : 55;
+
+    return `
+<svg width="${this.width}" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="descId">
+  <title id="titleId">${encodeHTML(this.a11yTitle)}</title>
+  <desc id="descId">${encodeHTML(this.a11yDesc)}</desc>
+  <style>
+    .header {
+      font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
+      fill: ${this.colors.titleColor};
+      animation: fadeIn 0.8s ease-in-out forwards;
+    }
+    @supports(-moz-appearance: auto) {
+      .header { font-size: 15.5px; }
+    }
+    ${this.renderAnimations()}
+    ${this.css}
+  </style>
+
+  ${this.renderGradient()}
+
+  <rect data-testid="card-bg" x="0.5" y="0.5" rx="${this.borderRadius}" height="99%" width="${this.width - 1}" fill="${bgFill}" stroke="${this.colors.borderColor}" stroke-opacity="${this.hideBorder ? 0 : 1}" />
+
+  ${this.renderTitle()}
+
+  <g data-testid="main-card-body" transform="translate(0, ${bodyY})">
+    ${body}
+  </g>
+</svg>`.trim();
+  }
+}

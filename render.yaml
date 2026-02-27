@@ -1,0 +1,18 @@
+# Render.com Blueprint — auto-detected on repo connect
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: credly-readme-stats
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter api build
+    startCommand: node packages/api/dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+    healthCheckPath: /health
+    autoDeploy: true
