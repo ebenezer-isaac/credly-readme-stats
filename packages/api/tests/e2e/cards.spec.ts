@@ -63,9 +63,10 @@ test.describe("Stats Card", () => {
     const svg = await loadSvg(page, `/api/stats?username=${USER}`);
     assertValidSvgStructure(svg);
 
-    // Should use display name, not username slug
-    expect(svg).not.toContain(USER);
-    expect(svg).toContain("Credly Stats");
+    // Title text should use display name, not username slug
+    // (username may appear in profile URL href, which is expected)
+    expect(svg).toMatch(/data-testid="header">[^<]*Credly Stats/);
+    expect(svg).not.toMatch(/data-testid="header">[^<]*ebenezer-isaac/);
 
     // All stat rows should be present
     expect(svg).toContain("Total Badges");
@@ -164,7 +165,7 @@ test.describe("Stats Card", () => {
   test("sets correct HTTP headers", async () => {
     const { status, headers } = await fetchSvg(`/api/stats?username=${USER}`);
     expect(status).toBe(200);
-    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
     expect(headers.get("cache-control")).toContain("max-age=");
   });
 
@@ -238,7 +239,7 @@ test.describe("Grid Card", () => {
   test("sets correct HTTP headers", async () => {
     const { status, headers } = await fetchSvg(`/api/grid?username=${USER}`);
     expect(status).toBe(200);
-    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
     expect(headers.get("cache-control")).toContain("max-age=");
   });
 
@@ -268,9 +269,9 @@ test.describe("Timeline Card", () => {
     const svg = await loadSvg(page, `/api/timeline?username=${USER}`);
     assertValidSvgStructure(svg);
 
-    // Should have timeline structure
+    // Title text should use display name, not username slug
     expect(svg).toContain("Badge Timeline");
-    expect(svg).not.toContain(USER);
+    expect(svg).not.toMatch(/data-testid="header">[^<]*ebenezer-isaac/);
 
     // Should have timeline entries with dates
     expect(svg).toMatch(/\d{4}/); // years in dates
@@ -316,7 +317,7 @@ test.describe("Timeline Card", () => {
   test("sets correct HTTP headers", async () => {
     const { status, headers } = await fetchSvg(`/api/timeline?username=${USER}`);
     expect(status).toBe(200);
-    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
   });
 
   test("supports sort=oldest", async ({ page }) => {
@@ -429,7 +430,7 @@ test.describe("Carousel Card", () => {
   test("sets correct HTTP headers", async () => {
     const { status, headers } = await fetchSvg(`/api/carousel?username=${USER}`);
     expect(status).toBe(200);
-    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
     expect(headers.get("cache-control")).toContain("max-age=");
   });
 
@@ -560,7 +561,7 @@ test.describe("Overview Card", () => {
   test("sets correct HTTP headers", async () => {
     const { status, headers } = await fetchSvg(`/api/overview?username=${USER}`);
     expect(status).toBe(200);
-    expect(headers.get("content-type")).toBe("image/svg+xml");
+    expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
     expect(headers.get("cache-control")).toContain("max-age=");
   });
 
@@ -653,7 +654,7 @@ test.describe("Error Cards", () => {
 
     for (const url of errorUrls) {
       const { headers, body } = await fetchSvg(url);
-      expect(headers.get("content-type")).toBe("image/svg+xml");
+      expect(headers.get("content-type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvgStructure(body);
     }
   });

@@ -64,14 +64,14 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username", async () => {
       const res = await app.request("/api/stats?username=testuser");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
     it("returns error SVG for missing username", async () => {
       const res = await app.request("/api/stats");
       expect(res.status).toBe(400);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -111,7 +111,7 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username", async () => {
       const res = await app.request("/api/grid?username=testuser");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -140,7 +140,7 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username", async () => {
       const res = await app.request("/api/timeline?username=testuser");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -163,7 +163,7 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username and badge_id", async () => {
       const res = await app.request("/api/badge?username=testuser&badge_id=badge-001");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -190,7 +190,7 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username", async () => {
       const res = await app.request("/api/carousel?username=testuser");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -213,7 +213,7 @@ describe("Route Integration Tests", () => {
     it("returns SVG with valid username", async () => {
       const res = await app.request("/api/overview?username=testuser");
       expect(res.status).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
+      expect(res.headers.get("Content-Type")).toBe("image/svg+xml; charset=utf-8");
       assertValidSvg(await res.text());
     });
 
@@ -265,7 +265,7 @@ describe("Route Integration Tests", () => {
       for (const path of errorRequests) {
         const res = await app.request(path);
         const body = await res.text();
-        if (res.headers.get("Content-Type") === "image/svg+xml") {
+        if (res.headers.get("Content-Type") === "image/svg+xml; charset=utf-8") {
           assertValidSvg(body);
         }
       }
